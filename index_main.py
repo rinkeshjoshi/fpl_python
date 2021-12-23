@@ -159,7 +159,8 @@ def display_tables():
     # current_rank = ranks_df.iloc[-1:, [2]]  last entry in the overall_rank column
     values = [["Current Rank", "Lowest Gameweek Rank", "Highest Gameweek Rank", "Average Gameweek Rank", "Highest Gameweek Score", "Lowest Gameweek Score"],
               [ranks_df.iloc[-1:, [2]], ranks_df["rank"].min(), ranks_df["rank"].max(), (ranks_df["rank"].mean().round()), ranks_df["points"].max(), ranks_df["points"].min()]]
-
+    
+    st.markdown("### Your Rank and Averages: ")
     Ranks_table = go.Figure(data=[go.Table(header=dict(values=["Title", "Rank and Score Averages"], line_color='darkslategray', fill_color='royalblue', align='center', font = dict(color = "white", size=20), height=40), cells=dict(values=values, line_color='darkslategray', fill_color='lightcyan', align='left', font = dict(color = "black", size=18), height=38))])
     st.plotly_chart(Ranks_table, use_container_width=True)
     
@@ -185,7 +186,34 @@ def display_tables():
     #     player_df = player_df["id", "web_name", "event_points"]
     #     if()
         
-        
+    # Just general idea about players # table 2
+    url_player_data = "https://fantasy.premierleague.com/api/bootstrap-static/"
+    request_player_data = requests.get(url_player_data)
+    json_player_data = request_player_data.json()
+
+    player_df = pd.DataFrame(json_player_data["elements"])
+    player_df = player_df[["web_name", "event_points", "bonus", "ict_index_rank", "total_points", "points_per_game", "selected_by_percent"]]
+    # print(player_df.head())
+    player_df = player_df.sort_values("total_points", ascending= False)
+    
+    values = [player_df["web_name"], player_df["bonus"], player_df["ict_index_rank"], player_df["total_points"], player_df["points_per_game"], player_df["selected_by_percent"]]
+
+    Player_details_table = go.Figure(data=[go.Table(header=dict(values=["Player Name", "Total Bonus Points", "ICT Index Rank (Lower is better)", "Total Points", "Points Per Game", "% Selected by users"], line_color='darkslategray', fill_color='royalblue', align='center', font = dict(color = "white", size=18), height=38), cells=dict(values=values, line_color='darkslategray', fill_color='lightcyan', align='left', font = dict(color = "black", size=18), height=38))])
+    Player_details_table.update_layout(width=1200, height=1000)
+    
+    st.markdown("### Player Performance Details (Scroll for more information): (Arranged by Total Score!)")
+    st.plotly_chart(Player_details_table, use_container_width=True)
+    
+    # Table for positional summary
+    position_df = pd.DataFrame(json_player_data["element_types"])
+    position_df = position_df[["element_count", "plural_name"]]
+    
+    values = [position_df["plural_name"], position_df["element_count"]]
+    
+    st.markdown("### Player Positional Details: ")
+    position_table = go.Figure(data=[go.Table(header=dict(values=["Position", "Total Players"], line_color='darkslategray', fill_color='royalblue', align='center', font = dict(color = "white", size=20), height=40), cells=dict(values=values, line_color='darkslategray', fill_color='lightcyan', align='left', font = dict(color = "black", size=18), height=38))])
+    st.plotly_chart(position_table, use_container_width=True)
+    
     #-------------------------------------------------------------------------------------------------------------#
     
     # Total Transfers and Hit Points table #3
@@ -195,6 +223,7 @@ def display_tables():
     values = [["Total Transfers Made", "Hits incurred(-)"], [transfers_df["event_transfers"].sum(), transfers_df["event_transfers_cost"].sum()]]
 
     Transfers_table = go.Figure(data=[go.Table(header=dict(values=["Title", "Transfer Summary"], line_color='darkslategray', fill_color='royalblue', align='center', font = dict(color = "white", size=20), height=40), cells=dict(values=values, line_color='darkslategray', fill_color='lightcyan', align='left', font = dict(color = "black", size=18), height=38))])
+    st.markdown("### Your Transfer Summary: ")
     st.plotly_chart(Transfers_table, use_container_width=True)
     
 def main():
