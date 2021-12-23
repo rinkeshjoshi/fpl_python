@@ -160,6 +160,7 @@ def display_tables():
     values = [["Current Rank", "Lowest Gameweek Rank", "Highest Gameweek Rank", "Average Gameweek Rank", "Highest Gameweek Score", "Lowest Gameweek Score"],
               [ranks_df.iloc[-1:, [2]], ranks_df["rank"].min(), ranks_df["rank"].max(), (ranks_df["rank"].mean().round()), ranks_df["points"].max(), ranks_df["points"].min()]]
     
+    st.markdown("-----")
     st.markdown("### Your Rank and Averages: ")
     Ranks_table = go.Figure(data=[go.Table(header=dict(values=["Title", "Rank and Score Averages"], line_color='darkslategray', fill_color='royalblue', align='center', font = dict(color = "white", size=20), height=40), cells=dict(values=values, line_color='darkslategray', fill_color='lightcyan', align='left', font = dict(color = "black", size=18), height=38))])
     st.plotly_chart(Ranks_table, use_container_width=True)
@@ -259,6 +260,7 @@ manager_id = st.text_input("Enter FPL Team ID","1", None, "user_id_key", "defaul
 value_check(manager_id) 
 
 # markdowns for tool info and formatting
+st.markdown("-----")
 st.markdown("### How-to section: \nYou might be wondering: how to get the manager id? The answer is simple. Just go to official [Fantasy Premier League Website](https://fantasy.premierleague.com), sign in with your account, go to ‘Pick Team’ then ‘View Gameweek history’. You can find your id in the URL, right before the ‘/history’.")
 st.markdown("-----")
 st.markdown("### Hello! My name is Rinkesh Joshi :wave: \nI am a graduate student at Carleton University in the Systems and Computer Engineering Department. I created this tool to try out a few of Python libraries.")
